@@ -40,4 +40,27 @@ public class BancoDeDados {
 		}
 		return ocorrenciasEncontradas;
 	}
+	
+	public List<Ocorrencia> listarOcorrencia(OcorrenciaSpec ocorrenciaSpec) {
+		List<Ocorrencia> ocorrenciasEncontradas = new ArrayList();
+		for (Ocorrencia ocorrencia : listOcorrencias) {
+			if(ocorrencia.getOcorrenciaSpec().match(ocorrenciaSpec)) {
+				ocorrenciasEncontradas.add(ocorrencia);
+			}
+		}
+		return ocorrenciasEncontradas;
+	}
+	
+	public void cadastrarOcorrencia(Usuario usuario, Local local, Ocorrencia ocorrencia) {
+		ocorrencia.setEmailUsuario(usuario.getEmail());
+		ocorrencia.setLocal(local);
+		listOcorrencias.add(ocorrencia);
+	}
+	
+	public boolean logar(Usuario usuario) {
+		for (Usuario u : listUsuarios) {
+			
+		}
+		return false;
+	}
 }
