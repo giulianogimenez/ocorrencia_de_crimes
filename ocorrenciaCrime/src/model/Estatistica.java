@@ -17,8 +17,8 @@ public class Estatistica {
 	public Estatistica() {
 		super();
 	}
-	public Estatistica(List<Ocorrencia> ocorrencias,List<Usuario> usuarios) {
-		indicePorSexo =  calcularIndicePorSexo(ocorrencias, usuarios);
+	public Estatistica(BancoDeDados bd) {
+		indicePorSexo =  calcularIndicePorSexo(bd);
 	}
 	public Map<String, Float> getIndicePorSexo() {
 		return indicePorSexo;
@@ -58,14 +58,26 @@ public class Estatistica {
 		this.dataCalculo = dataCalculo;
 	}
 	
-	public Map<String,Float> calcularIndicePorSexo( List<Ocorrencia> lOcorrencias, List<Usuario> lUsuario  ){
+	public Map<String,Float> calcularIndicePorSexo(BancoDeDados bd ){
 		float h = 0,m = 0;
-		for (Ocorrencia ocorrencia : lOcorrencias) {
-
+		String sexo;
+		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
+			sexo = bd.usuarioByEmail(ocorrencia.getEmailUsuario()).getUsuarioSpec().getSexo();
+			switch(sexo){
+			case "h":
+				h++;
+				break;
+			case "m":
+				m++;
+				break;
+			}
 		}
-		int commitTest = 0;
 		
-		return null;
+		Map<String,Float> map = new HashMap();
+		map.put("h", h/(h+m));
+		map.put("m", m/(h+m));
+		
+		return map;
 	}
 
 }
