@@ -63,7 +63,7 @@ public class Estatistica {
 		for (Ocorrencia ocorrencia : lOcorrencias) {
 
 		}
-		int commitTest = 12;
+		int commitTest = 0;
 		
 		return null;
 	}
