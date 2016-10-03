@@ -10,8 +10,8 @@ public class Estatistica {
 	private Map<String,Float> indicePorSexo = new HashMap();
 	private Map<String,Float> indicePorIdade = new HashMap();
 	private Map<String,Float> indicePorLocal = new HashMap();
-	private Map<String,Float> indicePorOcorrencia = new HashMap();
-	private Map<String,Float> indiceBoletimOcorrencia = new HashMap();
+	private Map<TipoOcorrencia,Float> indicePorOcorrencia = new HashMap();
+	private Map<Boolean,Float> indiceBoletimOcorrencia = new HashMap();
 	private Calendar dataCalculo ;
 	
 	public Estatistica() {
@@ -19,6 +19,10 @@ public class Estatistica {
 	}
 	public Estatistica(BancoDeDados bd) {
 		indicePorSexo =  calcularIndicePorSexo(bd);
+		//TODO: indicePorIdade =  calcularIndicePorIdade(bd);
+		//TODO: indicePorLocal =  calcularIndicePorLocal(bd);
+		//TODO: indicePorOcorrencia =  calcularIndicePorOcorrencia(bd);
+		//TODO: indiceBoletimOcorrencia =  calcularIndicePorBoletimOcorrencia(bd);
 	}
 	public Map<String, Float> getIndicePorSexo() {
 		return indicePorSexo;
@@ -38,17 +42,17 @@ public class Estatistica {
 	public void setIndicePorLocal(Map<String, Float> indicePorLocal) {
 		this.indicePorLocal = indicePorLocal;
 	}
-	public Map<String, Float> getIndicePorOcorrencia() {
+	public Map<TipoOcorrencia, Float> getIndicePorOcorrencia() {
 		return indicePorOcorrencia;
 	}
-	public void setIndicePorOcorrencia(Map<String, Float> indicePorOcorrencia) {
+	public void setIndicePorOcorrencia(Map<TipoOcorrencia, Float> indicePorOcorrencia) {
 		this.indicePorOcorrencia = indicePorOcorrencia;
 	}
-	public Map<String, Float> getIndiceBoletimOcorrencia() {
+	public Map<Boolean, Float> getIndiceBoletimOcorrencia() {
 		return indiceBoletimOcorrencia;
 	}
 	public void setIndiceBoletimOcorrencia(
-			Map<String, Float> indiceBoletimOcorrencia) {
+			Map<Boolean, Float> indiceBoletimOcorrencia) {
 		this.indiceBoletimOcorrencia = indiceBoletimOcorrencia;
 	}
 	public Calendar getDataCalculo() {
@@ -56,6 +60,16 @@ public class Estatistica {
 	}
 	public void setDataCalculo(Calendar dataCalculo) {
 		this.dataCalculo = dataCalculo;
+	}
+	
+	public Map<TipoOcorrencia,Float> calcularIndicePorOcorrencia(BancoDeDados bd ){
+		Map<TipoOcorrencia, Float> map = new HashMap();
+		
+		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
+			TipoOcorrencia tipoOcorrencia = ocorrencia.getOcorrenciaSpec().getTipoOcorrencia();
+			map.put(tipoOcorrencia, map.get(tipoOcorrencia)+1f);	
+		}
+		return map;
 	}
 	
 	public Map<String,Float> calcularIndicePorSexo(BancoDeDados bd ){
@@ -72,11 +86,9 @@ public class Estatistica {
 				break;
 			}
 		}
-		
 		Map<String,Float> map = new HashMap();
 		map.put("h", h/(h+m));
 		map.put("m", m/(h+m));
-		
 		return map;
 	}
 
