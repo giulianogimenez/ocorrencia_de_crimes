@@ -11,6 +11,6 @@ public class Teste {
 		
 		BancoDeDados b = new BancoDeDados();
 		Estatistica e = new Estatistica(b.getListOcorrencias(),b.getListUsuarios());
-		boolean test;
+		boolean t1;
 	}
 }
