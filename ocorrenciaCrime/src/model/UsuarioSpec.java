@@ -6,6 +6,7 @@ public class UsuarioSpec {
 	
 	private String sexo;
 	private Date dataNascimento;
+	int test;
 	
 	public String getSexo() {
 		return sexo;
