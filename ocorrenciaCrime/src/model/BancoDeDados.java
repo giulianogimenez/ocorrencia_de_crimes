@@ -63,4 +63,12 @@ public class BancoDeDados {
 		}
 		return false;
 	}
+	
+	public Usuario usuarioByEmail(String email){
+		for(Usuario usuario : listUsuarios){
+			if( usuario.getEmail().equals(email) )
+				return usuario;
+		}
+		return null;
+	}
 }
