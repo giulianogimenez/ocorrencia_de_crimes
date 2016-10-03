@@ -1,12 +1,15 @@
 package model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class BancoDeDados {
 	private List<Ocorrencia> listOcorrencias = new ArrayList();
 	private List<Usuario> listUsuarios = new ArrayList();
-	//TODO: private List<Estatistica> listEstatisticas = new ArrayList();
+	private List<Estatistica> listEstatisticas = new ArrayList();
 	
 	public List<Ocorrencia> getListOcorrencias() {
 		return listOcorrencias;
@@ -59,7 +62,10 @@ public class BancoDeDados {
 	
 	public boolean logar(Usuario usuario) {
 		for (Usuario u : listUsuarios) {
-			
+			if(u.getEmail().equals(usuario.getEmail()) && 
+					u.getSenha().equals(usuario.getEmail())) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -68,6 +74,38 @@ public class BancoDeDados {
 		for(Usuario usuario : listUsuarios){
 			if( usuario.getEmail().equals(email) )
 				return usuario;
+		}
+		return null;
+	}
+	
+	public void cadastrarUsuario(Usuario usuario) {
+		listUsuarios.add(usuario);
+	}
+	
+	public void salvarEstatistica(Estatistica estatistica) {
+		listEstatisticas.add(estatistica);
+	}
+	
+	public Estatistica buscarEstatistica(Calendar data) {
+		String periodoInicioString = new SimpleDateFormat("dd/MM/yyyy").format(data.getTime());
+		periodoInicioString += " 00:00";
+		String periodoFimString = new SimpleDateFormat("dd/MM/yyyy").format(data.getTime());
+		periodoFimString += " 23:59";
+		Calendar periodoInicio = Calendar.getInstance();
+		Calendar periodoFim = Calendar.getInstance();
+		try {
+			periodoInicio.setTime(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(periodoInicioString));
+			periodoFim.setTime(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(periodoFimString));
+		} catch (ParseException e) {
+			System.out.println("Data de busca inválida.");
+			return null;
+		} catch (Exception e) {
+			throw e;
+		}
+		for (Estatistica estatistica : listEstatisticas) {
+			if(estatistica.getDataCalculo().after(periodoInicio) && estatistica.getDataCalculo().before(periodoFim)) {
+				return estatistica;
+			}
 		}
 		return null;
 	}
