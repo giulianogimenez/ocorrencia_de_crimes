@@ -10,7 +10,6 @@ public class Teste {
 		System.out.println(TipoOcorrencia.ASSALTO.getDescricao());
 		
 		BancoDeDados b = new BancoDeDados();
-		Estatistica e = new Estatistica(b.getListOcorrencias(),b.getListUsuarios());
-		boolean t2;
+		Estatistica e = new Estatistica(b);
 	}
 }
