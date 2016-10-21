@@ -1,6 +1,8 @@
 package model;
 
+import java.time.Year;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,5 +93,36 @@ public class Estatistica {
 		map.put("m", m/(h+m));
 		return map;
 	}
+	
+	public Map<String,Float> calcularIndicePorIdade(BancoDeDados bd ){
+		Map<Integer,String> idades = new HashMap<Integer, String>();
+		Map<String,Float> retorno = new HashMap<String, Float>();
+		
+		for(int i=0;i<=9;i++){
+			int j = i*10;
+			idades.put(i,(j+1)+" a "+(j+10));
+			retorno.put((j+1)+" a "+(j+10), 0f);
+		}
+		
+		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
+			int idadeOcorrencia = getDiffYears(ocorrencia.getOcorrenciaSpec().getDataHora(), bd.usuarioByEmail(ocorrencia.getEmailUsuario()).getUsuarioSpec().getDataNascimento()) ;
+			idadeOcorrencia /= 10;
+			retorno.put(idades.get(idadeOcorrencia), retorno.get(idades.get(idadeOcorrencia)+1));
+		}
+		
+		for (Map.Entry entry : retorno.entrySet()){
+			retorno.put((String)entry.getKey(), (float)entry.getValue() / (float) bd.getListOcorrencias().size());
+		}
+		return retorno;
+	}
+
+	protected int getDiffYears(Calendar first, Calendar last) {
+		int diff = last.get(Calendar.YEAR) - first.get(Calendar.YEAR);
+		if (first.get(Calendar.MONTH) > last.get(Calendar.MONTH) || (first.get(Calendar.MONTH) == last.get(Calendar.MONTH) && first.get(Calendar.DATE) > last.get(Calendar.DATE))) {
+			diff--;
+		}
+		return diff;
+	}
+
 
 }

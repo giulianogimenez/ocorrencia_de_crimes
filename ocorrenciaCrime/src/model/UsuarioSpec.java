@@ -1,11 +1,11 @@
 package model;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class UsuarioSpec {
 	
 	private String sexo;
-	private Date dataNascimento;
+	private Calendar dataNascimento;
 	int test;
 	
 	public String getSexo() {
@@ -14,10 +14,10 @@ public class UsuarioSpec {
 	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
-	public Date getDataNascimento() {
+	public Calendar getDataNascimento() {
 		return dataNascimento;
 	}
-	public void setDataNascimento(Date dataNascimento) {
+	public void setDataNascimento(Calendar dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 	
