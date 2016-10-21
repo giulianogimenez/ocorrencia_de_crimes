@@ -1,19 +1,16 @@
 package model;
 
-import java.time.Year;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Estatistica {
 	
-	private Map<String,Float> indicePorSexo = new HashMap();
-	private Map<String,Float> indicePorIdade = new HashMap();
-	private Map<String,Float> indicePorLocal = new HashMap();
-	private Map<TipoOcorrencia,Float> indicePorOcorrencia = new HashMap();
-	private Map<Boolean,Float> indiceBoletimOcorrencia = new HashMap();
+	private Map<String,Float> indicePorSexo = new HashMap<String, Float>();
+	private Map<String,Float> indicePorIdade = new HashMap<String, Float>();
+	private Map<String,Float> indicePorLocal = new HashMap<String, Float>();
+	private Map<TipoOcorrencia,Float> indicePorOcorrencia = new HashMap<TipoOcorrencia, Float>();
+	private Map<Boolean,Float> indiceBoletimOcorrencia = new HashMap<Boolean, Float>();
 	private Calendar dataCalculo ;
 	
 	public Estatistica() {
@@ -21,7 +18,7 @@ public class Estatistica {
 	}
 	public Estatistica(BancoDeDados bd) {
 		indicePorSexo =  calcularIndicePorSexo(bd);
-		//TODO: indicePorIdade =  calcularIndicePorIdade(bd);
+		indicePorIdade =  calcularIndicePorIdade(bd);
 		//TODO: indicePorLocal =  calcularIndicePorLocal(bd);
 		//TODO: indicePorOcorrencia =  calcularIndicePorOcorrencia(bd);
 		//TODO: indiceBoletimOcorrencia =  calcularIndicePorBoletimOcorrencia(bd);
@@ -65,12 +62,13 @@ public class Estatistica {
 	}
 	
 	public Map<TipoOcorrencia,Float> calcularIndicePorOcorrencia(BancoDeDados bd ){
-		Map<TipoOcorrencia, Float> map = new HashMap();
+		Map<TipoOcorrencia, Float> map = new HashMap<TipoOcorrencia, Float>();
 		
 		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
 			TipoOcorrencia tipoOcorrencia = ocorrencia.getOcorrenciaSpec().getTipoOcorrencia();
 			map.put(tipoOcorrencia, map.get(tipoOcorrencia)+1f);	
 		}
+		
 		return map;
 	}
 	
@@ -88,7 +86,7 @@ public class Estatistica {
 				break;
 			}
 		}
-		Map<String,Float> map = new HashMap();
+		Map<String,Float> map = new HashMap<String, Float>();
 		map.put("h", h/(h+m));
 		map.put("m", m/(h+m));
 		return map;
@@ -110,7 +108,7 @@ public class Estatistica {
 			retorno.put(idades.get(idadeOcorrencia), retorno.get(idades.get(idadeOcorrencia)+1));
 		}
 		
-		for (Map.Entry entry : retorno.entrySet()){
+		for (Map.Entry<String, Float> entry : retorno.entrySet()){
 			retorno.put((String)entry.getKey(), (float)entry.getValue() / (float) bd.getListOcorrencias().size());
 		}
 		return retorno;
