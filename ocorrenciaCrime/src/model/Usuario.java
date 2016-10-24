@@ -27,8 +27,8 @@ public class Usuario {
 	
 	public boolean autenticar(Usuario user){
 		if(user == null) return false;
-		if(user.getEmail().equals(this.email)) return false;
-		if(user.getSenha().equals(this.senha)) return false;
+		if(!user.getEmail().equals(this.email)) return false;
+		if(!user.getSenha().equals(this.senha)) return false;
 		return true;
 	}
 
