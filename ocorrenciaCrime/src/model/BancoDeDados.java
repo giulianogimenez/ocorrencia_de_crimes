@@ -7,9 +7,9 @@ import java.util.Calendar;
 import java.util.List;
 
 public class BancoDeDados {
-	private List<Ocorrencia> listOcorrencias = new ArrayList();
-	private List<Usuario> listUsuarios = new ArrayList();
-	private List<Estatistica> listEstatisticas = new ArrayList();
+	private List<Ocorrencia> listOcorrencias = new ArrayList<>();
+	private List<Usuario> listUsuarios = new ArrayList<>();
+	private List<Estatistica> listEstatisticas = new ArrayList<>();
 	
 	public List<Ocorrencia> getListOcorrencias() {
 		return listOcorrencias;
@@ -24,10 +24,10 @@ public class BancoDeDados {
 		this.listUsuarios = listUsuarios;
 	}
 	
-	public List<Ocorrencia> listarOcorrencia(LocalSpec localSpec) {
+	public List<Ocorrencia> listarOcorrencia(Local local) {
 		List<Ocorrencia> ocorrenciasEncontradas = new ArrayList();
 		for (Ocorrencia ocorrencia : listOcorrencias) {
-			if(ocorrencia.getLocal().getLocalSpec().match(localSpec)) {
+			if(ocorrencia.getLocal().match(local)) {
 				ocorrenciasEncontradas.add(ocorrencia);
 			}
 		}

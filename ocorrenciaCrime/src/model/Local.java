@@ -1,25 +1,47 @@
 package model;
 
 public class Local {
-	private String latitude;
-	private String longitude;
-	private LocalSpec localSpec;
-	public String getLatitude() {
-		return latitude;
+	private String cidade;
+	private String rua;
+	private String bairro;
+	private String estado;
+	
+	public String getCidade() {
+		return cidade;
 	}
-	public void setLatitude(String latitude) {
-		this.latitude = latitude;
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
 	}
-	public String getLongitude() {
-		return longitude;
+	public String getRua() {
+		return rua;
 	}
-	public void setLongitude(String longitude) {
-		this.longitude = longitude;
+	public void setRua(String rua) {
+		this.rua = rua;
 	}
-	public LocalSpec getLocalSpec() {
-		return localSpec;
+	public String getBairro() {
+		return bairro;
 	}
-	public void setLocalSpec(LocalSpec localSpec) {
-		this.localSpec = localSpec;
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+	public String getEstado() {
+		return estado;
+	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	
+	public boolean match(Local local) {
+		if(local == null)
+			return false;
+		if(!local.getBairro().equals(this.bairro))
+			return false;
+		if(!local.getCidade().equals(this.cidade))
+			return false;
+		if(!local.getEstado().equals(this.estado))
+			return false;
+		if(!local.getRua().equals(this.rua))
+			return false;
+		return true;
 	}
 }

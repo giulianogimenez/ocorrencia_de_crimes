@@ -12,56 +12,42 @@ public class Estatistica {
 	private Map<TipoOcorrencia,Float> indicePorOcorrencia = new HashMap<TipoOcorrencia, Float>();
 	private Map<Boolean,Float> indiceBoletimOcorrencia = new HashMap<Boolean, Float>();
 	private Calendar dataCalculo ;
+	private final BancoDeDados bd;
 	
-	public Estatistica() {
-		super();
-	}
+	//Injeção de dependência
 	public Estatistica(BancoDeDados bd) {
-		indicePorSexo =  calcularIndicePorSexo(bd);
-		indicePorIdade =  calcularIndicePorIdade(bd);
-		//TODO: indicePorLocal =  calcularIndicePorLocal(bd);
-		//TODO: indicePorOcorrencia =  calcularIndicePorOcorrencia(bd);
-		//TODO: indiceBoletimOcorrencia =  calcularIndicePorBoletimOcorrencia(bd);
+		this.bd = bd;
 	}
+	
 	public Map<String, Float> getIndicePorSexo() {
+		indicePorSexo =  calcularIndicePorSexo();
 		return indicePorSexo;
 	}
-	public void setIndicePorSexo(Map<String, Float> indicePorSexo) {
-		this.indicePorSexo = indicePorSexo;
-	}
+	
 	public Map<String, Float> getIndicePorIdade() {
+		indicePorIdade =  calcularIndicePorIdade();
 		return indicePorIdade;
 	}
-	public void setIndicePorIdade(Map<String, Float> indicePorIdade) {
-		this.indicePorIdade = indicePorIdade;
-	}
+	
 	public Map<String, Float> getIndicePorLocal() {
 		return indicePorLocal;
 	}
-	public void setIndicePorLocal(Map<String, Float> indicePorLocal) {
-		this.indicePorLocal = indicePorLocal;
-	}
+	
+	
 	public Map<TipoOcorrencia, Float> getIndicePorOcorrencia() {
+		indicePorOcorrencia = calcularIndicePorOcorrencia();
 		return indicePorOcorrencia;
 	}
-	public void setIndicePorOcorrencia(Map<TipoOcorrencia, Float> indicePorOcorrencia) {
-		this.indicePorOcorrencia = indicePorOcorrencia;
-	}
+	
 	public Map<Boolean, Float> getIndiceBoletimOcorrencia() {
 		return indiceBoletimOcorrencia;
 	}
-	public void setIndiceBoletimOcorrencia(
-			Map<Boolean, Float> indiceBoletimOcorrencia) {
-		this.indiceBoletimOcorrencia = indiceBoletimOcorrencia;
-	}
+	
 	public Calendar getDataCalculo() {
 		return dataCalculo;
 	}
-	public void setDataCalculo(Calendar dataCalculo) {
-		this.dataCalculo = dataCalculo;
-	}
-	
-	public Map<TipoOcorrencia,Float> calcularIndicePorOcorrencia(BancoDeDados bd ){
+		
+	private Map<TipoOcorrencia,Float> calcularIndicePorOcorrencia(){
 		Map<TipoOcorrencia, Float> map = new HashMap<TipoOcorrencia, Float>();
 		
 		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
@@ -72,7 +58,7 @@ public class Estatistica {
 		return map;
 	}
 	
-	public Map<String,Float> calcularIndicePorSexo(BancoDeDados bd ){
+	private Map<String,Float> calcularIndicePorSexo(){
 		float h = 0,m = 0;
 		String sexo;
 		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
@@ -92,7 +78,7 @@ public class Estatistica {
 		return map;
 	}
 	
-	public Map<String,Float> calcularIndicePorIdade(BancoDeDados bd ){
+	private Map<String,Float> calcularIndicePorIdade(){
 		Map<Integer,String> idades = new HashMap<Integer, String>();
 		Map<String,Float> retorno = new HashMap<String, Float>();
 		
@@ -114,7 +100,7 @@ public class Estatistica {
 		return retorno;
 	}
 
-	protected int getDiffYears(Calendar first, Calendar last) {
+	private int getDiffYears(Calendar first, Calendar last) {
 		int diff = last.get(Calendar.YEAR) - first.get(Calendar.YEAR);
 		if (first.get(Calendar.MONTH) > last.get(Calendar.MONTH) || (first.get(Calendar.MONTH) == last.get(Calendar.MONTH) && first.get(Calendar.DATE) > last.get(Calendar.DATE))) {
 			diff--;
