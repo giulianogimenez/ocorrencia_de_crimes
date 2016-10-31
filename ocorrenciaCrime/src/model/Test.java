@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.Assert.*;
 
+import java.util.Map;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,7 +22,6 @@ public class Test {
 		usuarioSpec1.setSexo("M");
 		user1.setUsuarioSpec(usuarioSpec1);
 		
-		
 		Usuario user2 = new Usuario();
 		user2.setEmail("usuario2@email.com.br");
 		user2.setSenha("456");
@@ -30,6 +30,9 @@ public class Test {
 		usuarioSpec2.setSexo("F");
 		user2.setUsuarioSpec(usuarioSpec2);
 
+		bancoDeDados.cadastrarUsuario(user1);
+		bancoDeDados.cadastrarUsuario(user2);
+		
 		OcorrenciaSpec ocorrenciaSpec = new OcorrenciaSpec();
 		ocorrenciaSpec.setDataHora(parseStringToCalendar("20/10/2016"));
 		ocorrenciaSpec.setFezBO(true);
@@ -39,18 +42,41 @@ public class Test {
 		localInvasao.setBairro("Centro");
 		localInvasao.setCidade("SJC");
 		localInvasao.setEstado("SP");
-		localInvasao.setBairro("Rua Humaita");
+		localInvasao.setRua("Rua Humaita");
 		
 		Ocorrencia ocorrencia = new Ocorrencia();
 		ocorrencia.setDetalhes("Invadiram a minha casa e levaram o meu cachorro!");
-		ocorrencia.setEmailUsuario("usuario1@email.com.br");
-		ocorrencia.setObjetosRoubados("Cachorro, Coleira e o pote de ração");
+		ocorrencia.setObjetosRoubados("Cachorro, Coleira e o pote de raï¿½ï¿½o");
 		ocorrencia.setOcorrenciaSpec(ocorrenciaSpec);
 		ocorrencia.setValorPrejuizo(1000f);
-		ocorrencia.setLocal(localInvasao);
 		
-		bancoDeDados.cadastrarUsuario(user2);
-		bancoDeDados.cadastrarUsuario(user1);		
+		OcorrenciaSpec ocorrenciaSpec2 = new OcorrenciaSpec();
+		ocorrenciaSpec2.setDataHora(parseStringToCalendar("17/10/2016"));
+		ocorrenciaSpec2.setFezBO(false);
+		ocorrenciaSpec2.setTipoOcorrencia(TipoOcorrencia.ASSALTO);
+
+		Local localAssalto = new Local();
+		localAssalto.setBairro("Centro");
+		localAssalto.setCidade("SJC");
+		localAssalto.setEstado("SP");
+		localAssalto.setRua("Av. Nelson D'avila");
+		
+		Ocorrencia ocorrencia2 = new Ocorrencia();
+		ocorrencia2.setDetalhes("Fui assaltado enquanto passeava de carro na Nelson D'avila... numa sexta... a noite... sÃ³ q n tava fazendo nada de errado la...");
+		ocorrencia2.setObjetosRoubados("Relogio, cateira com documentos e celular");
+		ocorrencia2.setOcorrenciaSpec(ocorrenciaSpec2);
+		ocorrencia2.setValorPrejuizo(3000f);
+		
+		bancoDeDados.cadastrarOcorrencia(user1, localInvasao, ocorrencia);
+		bancoDeDados.cadastrarOcorrencia(user2, localAssalto, ocorrencia2);
+		
+		assertEquals(bancoDeDados.getListUsuarios().size(), 2);
+		assertEquals(bancoDeDados.getListOcorrencias().size(), 2);
+		
+		Estatistica estatistica = new Estatistica(bancoDeDados);
+		Map<TipoOcorrencia, Float> result = estatistica.getIndicePorOcorrencia();
+		assertEquals(estatistica.getIndiceBoletimOcorrencia().size(), 1);
+
 	}
 	
 	private Calendar parseStringToCalendar(String date) {
@@ -59,7 +85,7 @@ public class Test {
 			c.setTime(new SimpleDateFormat("dd/MM/yyy").parse(date));
 			return c;
 		} catch(ParseException e) {
-			throw new IllegalArgumentException("Data inserida inválida!");
+			throw new IllegalArgumentException("Data inserida invï¿½lida!");
 		}
 	}
 }
