@@ -75,7 +75,7 @@ public class Test {
 		
 		Estatistica estatistica = new Estatistica(bancoDeDados);
 		Map<TipoOcorrencia, Float> result = estatistica.getIndicePorOcorrencia();
-		assertEquals(estatistica.getIndiceBoletimOcorrencia().size(), 1);
+		assertEquals(estatistica.getIndiceBoletimOcorrencia().get(Boolean.TRUE), new Float(0.5));
 
 	}
 	

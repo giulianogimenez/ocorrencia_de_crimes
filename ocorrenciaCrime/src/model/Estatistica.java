@@ -51,33 +51,36 @@ public class Estatistica {
 	}
 		
 	private Map<TipoOcorrencia,Float> calcularIndicePorOcorrencia(){
-		Map<TipoOcorrencia, Float> map = new HashMap<TipoOcorrencia, Float>();
+		Map<TipoOcorrencia, Float> retorno = new HashMap<TipoOcorrencia, Float>();
 		
 		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
 			TipoOcorrencia tipoOcorrencia = ocorrencia.getOcorrenciaSpec().getTipoOcorrencia();
-			map.put(tipoOcorrencia, map.get(tipoOcorrencia)+1f);	
+			retorno.put(tipoOcorrencia, retorno.get(tipoOcorrencia) == null ? 1f : retorno.get(tipoOcorrencia));	
+		}
+		for (Map.Entry<TipoOcorrencia, Float> entry : retorno.entrySet()){
+			retorno.put((TipoOcorrencia)entry.getKey(), (float)entry.getValue() / (float) bd.getListOcorrencias().size());
 		}
 		
-		return map;
+		return retorno;
 	}
 	
 	private Map<String,Float> calcularIndicePorSexo(){
-		float h = 0,m = 0;
-		String sexo;
+		float m = 0,f = 0;
+		char sexo;
 		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
-			sexo = bd.usuarioByEmail(ocorrencia.getEmailUsuario()).getUsuarioSpec().getSexo();
+			sexo = bd.usuarioByEmail(ocorrencia.getEmailUsuario()).getUsuarioSpec().getSexo().toCharArray()[0];
 			switch(sexo){
-			case "h":
-				h++;
-				break;
-			case "m":
+			case 'm':
 				m++;
+				break;
+			case 'f':
+				f++;
 				break;
 			}
 		}
 		Map<String,Float> map = new HashMap<String, Float>();
-		map.put("h", h/(h+m));
-		map.put("m", m/(h+m));
+		map.put("m", m/(m+f));
+		map.put("f", f/(m+f));
 		return map;
 	}
 	
