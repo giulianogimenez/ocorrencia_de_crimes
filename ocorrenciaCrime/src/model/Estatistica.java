@@ -11,12 +11,13 @@ public class Estatistica {
 	private Map<String,Float> indicePorLocal = new HashMap<String, Float>();
 	private Map<TipoOcorrencia,Float> indicePorOcorrencia = new HashMap<TipoOcorrencia, Float>();
 	private Map<Boolean,Float> indiceBoletimOcorrencia = new HashMap<Boolean, Float>();
-	private Calendar dataCalculo ;
+	private Calendar dataCalculo;
 	private final BancoDeDados bd;
 	
 	//Injeção de dependência
 	public Estatistica(BancoDeDados bd) {
 		this.bd = bd;
+		this.dataCalculo = Calendar.getInstance();
 	}
 	
 	public Map<String, Float> getIndicePorSexo() {
@@ -30,6 +31,7 @@ public class Estatistica {
 	}
 	
 	public Map<String, Float> getIndicePorLocal() {
+		indicePorLocal = calcularIndicePorLocal();
 		return indicePorLocal;
 	}
 	
@@ -40,6 +42,7 @@ public class Estatistica {
 	}
 	
 	public Map<Boolean, Float> getIndiceBoletimOcorrencia() {
+		indiceBoletimOcorrencia = calcularBoletimOcorrencia();
 		return indiceBoletimOcorrencia;
 	}
 	
@@ -99,6 +102,35 @@ public class Estatistica {
 		}
 		return retorno;
 	}
+	
+	private Map<String,Float> calcularIndicePorLocal(){
+		Map<String,Float> retorno = new HashMap<String, Float>();
+
+		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
+			String cidadeOcorrencia = ocorrencia.getLocal().getCidade();
+			retorno.put(cidadeOcorrencia, retorno.get(cidadeOcorrencia) == null ? 1f : retorno.get(cidadeOcorrencia));
+		}
+		
+		for (Map.Entry<String, Float> entry : retorno.entrySet()){
+			retorno.put((String)entry.getKey(), (float)entry.getValue() / (float) bd.getListOcorrencias().size());
+		}
+		return retorno;
+	}
+	
+	private Map<Boolean,Float> calcularBoletimOcorrencia(){
+		Map<Boolean,Float> retorno = new HashMap<Boolean, Float>();
+
+		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
+			Boolean fezBo = ocorrencia.getOcorrenciaSpec().isFezBO();
+			retorno.put(fezBo, retorno.get(fezBo) == null ? 1f : retorno.get(fezBo));
+		}
+		
+		for ( Map.Entry<Boolean, Float> entry : retorno.entrySet() ){
+			retorno.put((Boolean)entry.getKey(), (float)entry.getValue() / (float) bd.getListOcorrencias().size());
+		}
+		return retorno;
+	}
+	
 
 	private int getDiffYears(Calendar first, Calendar last) {
 		int diff = last.get(Calendar.YEAR) - first.get(Calendar.YEAR);
@@ -107,6 +139,5 @@ public class Estatistica {
 		}
 		return diff;
 	}
-
 
 }
