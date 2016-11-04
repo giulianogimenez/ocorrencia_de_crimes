@@ -14,7 +14,7 @@ public class Estatistica {
 	private Calendar dataCalculo;
 	private final BancoDeDados bd;
 	
-	//Injeção de dependência
+	//Injeï¿½ï¿½o de dependï¿½ncia
 	public Estatistica(BancoDeDados bd) {
 		this.bd = bd;
 		this.dataCalculo = Calendar.getInstance();
@@ -70,17 +70,17 @@ public class Estatistica {
 		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
 			sexo = bd.usuarioByEmail(ocorrencia.getEmailUsuario()).getUsuarioSpec().getSexo().toCharArray()[0];
 			switch(sexo){
-			case 'm':
+			case 'M':
 				m++;
 				break;
-			case 'f':
+			case 'F':
 				f++;
 				break;
 			}
 		}
 		Map<String,Float> map = new HashMap<String, Float>();
-		map.put("m", m/(m+f));
-		map.put("f", f/(m+f));
+		map.put("M", m/(m+f));
+		map.put("F", f/(m+f));
 		return map;
 	}
 	
@@ -90,18 +90,19 @@ public class Estatistica {
 		
 		for(int i=0;i<=9;i++){
 			int j = i*10;
-			idades.put(i,(j+1)+" a "+(j+10));
+			idades.put(i,Integer.valueOf(j+1).toString() + " a "+Integer.valueOf(j+10).toString());
 			retorno.put((j+1)+" a "+(j+10), 0f);
 		}
 		
 		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
-			int idadeOcorrencia = getDiffYears(ocorrencia.getOcorrenciaSpec().getDataHora(), bd.usuarioByEmail(ocorrencia.getEmailUsuario()).getUsuarioSpec().getDataNascimento()) ;
+			int idadeOcorrencia = getDiffYears(bd.usuarioByEmail(ocorrencia.getEmailUsuario()).getUsuarioSpec().getDataNascimento(), ocorrencia.getOcorrenciaSpec().getDataHora()) ;
 			idadeOcorrencia /= 10;
-			retorno.put(idades.get(idadeOcorrencia), retorno.get(idades.get(idadeOcorrencia)+1));
+			retorno.put(idades.get(idadeOcorrencia), retorno.get(idades.get(idadeOcorrencia)) + 1f);
 		}
 		
 		for (Map.Entry<String, Float> entry : retorno.entrySet()){
-			retorno.put((String)entry.getKey(), (float)entry.getValue() / (float) bd.getListOcorrencias().size());
+			if(entry.getValue() != null)
+				retorno.put((String)entry.getKey(), (float)entry.getValue() / (float) bd.getListOcorrencias().size());
 		}
 		return retorno;
 	}
@@ -111,7 +112,7 @@ public class Estatistica {
 
 		for (Ocorrencia ocorrencia : bd.getListOcorrencias()) {
 			String cidadeOcorrencia = ocorrencia.getLocal().getCidade();
-			retorno.put(cidadeOcorrencia, retorno.get(cidadeOcorrencia) == null ? 1f : retorno.get(cidadeOcorrencia));
+			retorno.put(cidadeOcorrencia, retorno.get(cidadeOcorrencia) == null ? 1f : retorno.get(cidadeOcorrencia) + 1f);
 		}
 		
 		for (Map.Entry<String, Float> entry : retorno.entrySet()){
